@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edge Weight Prediction For Category-Agnostic Pose Estimation</title>
+
+  <!-- Meta tags -->
+<!--  <meta name="google-site-verification" content="JWoNA1uZW6yUOOmWuXfBl6u6ZkCAy1a5m2j8Qq8GZfc" />-->
+  <meta name="keywords" content="Edge Weight Prediction For Category-Agnostic Pose Estimation">
+  <meta property="og:site_name" content="Edge Weight Prediction For Category-Agnostic Pose Estimation">
+  <meta property="og:url" content="">
+  <meta property="og:title" content="Edge Weight Prediction For Category-Agnostic Pose Estimation">
+  <meta name="description"
+    content="Edge Weight Prediction For Category-Agnostic Pose Estimation">
+  <meta property="og:description"
+    content="Edge Weight Prediction For Category-Agnostic Pose Estimation">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" type="text/css" href="./static/slick/slick.css" />
+  <link rel="stylesheet" type="text/css" href="./static/slick/slick-theme.css" />
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script type="text/javascript" src="./static/slick/slick.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <!-- <script type="text/javascript" src="https://www.maths.nottingham.ac.uk/plp/pmadw/LaTeXMathML.js"></script> -->
+    <style>
+    .small-text {
+      font-size: 0.8rem; /* Reduce text size for the table */
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Edge Weight Prediction For Category-Agnostic Pose Estimation</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://orhir.github.io">Or Hirschorn</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.co.il/citations?hl=iw&user=hpItE1QAAAAJ">Shai Avidan</a>
+              </span>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Tel Aviv University</span>
+            </div>
+
+            <!-- <div>
+              <p style="font-size:23px;font-weight:bold;padding-top: 5px;">CVPR 2023</p>
+            </div> -->
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link.
+                <span class="link-block">
+                  <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>PDF</span>
+                  </a>
+                </span>
+                -->
+                <!-- arXiv Link. -->
+                <span class="link-block">
+                  <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href=""
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code - Coming Soon</span>
+                  </a>
+                </span>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Teaser -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div id="teaser" class="has-text-centered">
+          <img style="width: 60%;" src="./static/images/teaser.png" alt="EdgeCape teaser.">
+        </div>
+<br><br>
+        <h2 class="subtitle has-text-centered">
+          <span class="method-name"></span>Given only <b><i>one</i></b> example image and skeleton,
+          <br>
+          our method refines the skeleton to enhance pose estimation on unseen categories.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- Abstract. -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+Category-Agnostic Pose Estimation (CAPE) localizes keypoints across diverse object categories with a single model, using one or a few annotated support images. Recent works have shown that using a pose graph (i.e., treating keypoints as nodes in a graph rather than isolated points) helps handle occlusions and break symmetry. However, these methods assume a static pose graph with equal-weight edges, leading to suboptimal results.
+<br>
+We introduce EdgeCape, a novel framework that overcomes these limitations by predicting the graph's edge weights which optimizes localization. To further leverage structural priors, we propose integrating Markovian Structural Bias, which modulates the self-attention interaction between nodes based on the number of hops between them. We show that this improves the model’s ability to capture global spatial dependencies. Evaluated on the MP-100 benchmark, which includes 100 categories and over 20K images, EdgeCape achieves state-of-the-art results in the 1-shot setting and leads among similar-sized methods in the 5-shot setting, significantly improving keypoint localization accuracy.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Paper video. -->
+  <!-- <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-12">
+          <div class="content has-text-justified">
+            <div class="columns is-centered has-text-centered">
+              <div class="column is-four-fifths">
+                <h2 class="title is-3">Video</h2>
+                <div class="publication-video">
+                  <iframe src="https://www.youtube.com/embed/VlieNoCwHO4?rel=0&amp;showinfo=0" frameborder="0"
+                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- Method explanation -->
+  <!-- <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-12">
+          <h2 class="title is-3">Method</h2>
+
+          <div class="content has-text-justified">
+            <div class="has-text-centered">
+              <img src="./static/images/arch.png" />
+              <br />
+            </div>
+            <p>
+The core idea of our work is to take advantage of the geometrical structure encoded in the pose graph. Our method is built upon the enhanced baseline, replacing the transformer decoder module with our novel Graph Transformer Decoder.
+            </p>
+
+            <p>
+              We recognize that self-attention, a mechanism that helps our model focus on relevant information, can be thought of as a graph convolutional network (GCN) with a learnable adjacency matrix. When we are dealing with pose estimation for a single category, this mechanism is sufficient for learning the relationships between keypoints and integrating a learned structure into the model.
+However, for category-agnostic pose estimation (CAPE) tasks, where the model needs to work with various object categories, it is beneficial to explicitly consider the semantic connections between keypoints. This helps the model break symmetry, maintain consistent structure, and handle noisy keypoints by sharing information among neighboring keypoints.
+We implemented this prior in the transformer decoder. Specifically, GTD is based on the original CapeFormer decoder, changing the feed-forward network from a simple MLP to a GCN network. To address the potential problem of excessive smoothing often observed in deep GCNs, which can lead to a reduction in the distinctiveness of node characteristics and consequently a decline in performance, we introduce a linear layer for each node following the GCN layer.
+            </p>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+-->
+  <!-- General Examples -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-12">
+          <h2 class="title is-3">Results</h2>
+          <h3 class="title is-4">Qualitative Results</h3>
+          <div class="content has-text-justified">
+            <p>
+              Using our method, given a <b>support</b> image and skeleton we can refine the structure for better pose estimation on images from unseen categories.
+            </p>
+          </div>
+
+          <section class="hero is-light is-small">
+            <div class="hero-body">
+              <div class="container">
+                <div id="results-carousel" class="carousel results-carousel">
+
+
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/klipspringer_57_klipspringer_74_0.png" />
+                    <p class="caption"><b>Support</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/klipspringer_57_klipspringer_74_1.png" />
+                    <p class="caption"><b>GT</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/klipspringer_57_klipspringer_74_2.png" />
+                    <p class="caption"><b>Ours</b></p>
+                  </div>
+
+
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/Pileated_Woodpecker_0004_180307_Pileated_Woodpecker_0004_180307_0.png" />
+                    <p class="caption"><b>Support</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/Pileated_Woodpecker_0004_180307_American_Three_Toed_Woodpecker_0019_179870_1.png" />
+                    <p class="caption"><b>GT</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/Pileated_Woodpecker_0004_180307_American_Three_Toed_Woodpecker_0019_179870_2.png" />
+                    <p class="caption"><b>Ours</b></p>
+                  </div>
+
+
+
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/121186_147105_0.png" />
+                    <p class="caption"><b>Support</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/121186_147105_1.png" />
+                    <p class="caption"><b>GT</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/121186_147105_2.png" />
+                    <p class="caption"><b>Ours</b></p>
+                  </div>
+
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/000000052046_000000052152_0.png" />
+                    <p class="caption"><b>Support</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/000000052046_000000052152_1.png" />
+                    <p class="caption"><b>GT</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/qualitative/000000052046_000000052152_2.png" />
+                    <p class="caption"><b>Ours</b></p>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-12">
+          <h3 class="title is-4">Predicted Graphs</h3>
+          <div class="content has-text-justified">
+            <p>
+              Our model predicts the <b>best weighted graph structure</b> for localization.
+              <br>
+              Edge weights are shown in the graph edges, with thicker edges indicating higher weights.
+            </p>
+
+          <section class="hero is-light is-small">
+            <div class="hero-body">
+              <div class="container">
+                <div id="ood-carousel" class="carousel ood-carousel">
+
+                  <div class="iQtem has-text-centered">
+                    <img src="./static/images/graphs/Red_Bellied_Woodpecker_0070_181182_Red_Cockaded_Woodpecker_0055_182520_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/Red_Bellied_Woodpecker_0070_181182_Red_Cockaded_Woodpecker_0055_182520_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/000000006845_000000007064_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/000000006845_000000007064_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/050647_033812_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/050647_033812_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                    <div class="iQtem has-text-centered">
+                    <img src="./static/images/graphs/000000056568_000000056591_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/000000056568_000000056591_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                   <div class="iQtem has-text-centered">
+                    <img src="./static/images/graphs/000000056650_000000056674_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/000000056650_000000056674_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                   <div class="iQtem has-text-centered">
+                    <img src="./static/images/graphs/145548320_1_205848147_1_0.png" />
+                    <p class="caption"><b>Input</b></p>
+                  </div>
+                  <div class="item has-text-centered">
+                    <img src="./static/images/graphs/145548320_1_205848147_1_1.png" />
+                    <p class="caption"><b>Prediction</b></p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-12">
+          <h3 class="title is-4">Quantitative Results</h3>
+          <div class="content has-text-justified">
+            <p>
+We evaluate our method on the MP-100 dataset under both 1-shot and 5-shot settings. For a fair comparison, we use backbones of similar sizes across methods. However, it is important to highlight that PPM differs significantly from other approaches, as it leverages the much larger Stable Diffusion model and relies on test-time optimization. These factors give PPM a distinct advantage but also introduce additional complexity and computational overhead. Nevertheless, we include its results for the sake of completeness.
+As shown in the results, our method achieves state-of-the-art performance, outperforming previous methods by an average margin of 1.21% in the 1-shot setting. In the 5-shot setting, our approach maintains the highest performance among similar-sized methods, with an improvement of 0.84%. These results underscore the robustness and efficiency of our method, particularly in challenging few-shot scenarios, where structural priors and adaptive graph refinement are critical.
+        </div>
+        <div class="table-container">
+
+  <table class="table is-striped is-bordered is-fullwidth small-text">
+  <thead>
+    <tr>
+      <th rowspan="2"><strong>Model</strong></th>
+      <th rowspan="2"><strong>Backbone</strong></th>
+      <th colspan="6"><strong>1-Shot</strong></th>
+      <th colspan="6"><strong>5-Shot</strong></th>
+    </tr>
+    <tr>
+      <th>Split 1</th>
+      <th>Split 2</th>
+      <th>Split 3</th>
+      <th>Split 4</th>
+      <th>Split 5</th>
+      <th><strong>Avg</strong></th>
+      <th>Split 1</th>
+      <th>Split 2</th>
+      <th>Split 3</th>
+      <th>Split 4</th>
+      <th>Split 5</th>
+      <th><strong>Avg</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POMNet</td>
+      <td>ResNet-50</td>
+      <td>84.23</td>
+      <td>78.25</td>
+      <td>78.17</td>
+      <td>78.68</td>
+      <td>79.17</td>
+      <td>79.70</td>
+      <td>84.72</td>
+      <td>79.61</td>
+      <td>78.00</td>
+      <td>80.38</td>
+      <td>80.85</td>
+      <td>80.71</td>
+    </tr>
+    <tr>
+      <td>CapeFormer</td>
+      <td>ResNet-50</td>
+      <td>89.45</td>
+      <td>84.88</td>
+      <td>83.59</td>
+      <td>83.53</td>
+      <td>85.09</td>
+      <td>85.31</td>
+      <td>91.94</td>
+      <td>88.92</td>
+      <td>89.40</td>
+      <td>88.01</td>
+      <td>88.25</td>
+      <td>89.30</td>
+    </tr>
+    <tr>
+      <td>ESCAPE</td>
+      <td>ResNet-50</td>
+      <td>86.89</td>
+      <td>82.55</td>
+      <td>81.25</td>
+      <td>81.72</td>
+      <td>81.32</td>
+      <td>82.74</td>
+      <td>91.41</td>
+      <td>87.43</td>
+      <td>85.33</td>
+      <td>87.27</td>
+      <td>86.76</td>
+      <td>87.63</td>
+    </tr>
+    <tr>
+      <td>MetaPoint+</td>
+      <td>ResNet-50</td>
+      <td>90.43</td>
+      <td>85.59</td>
+      <td>84.52</td>
+      <td>84.34</td>
+      <td>85.96</td>
+      <td>86.17</td>
+      <td>92.58</td>
+      <td>89.63</td>
+      <td>89.98</td>
+      <td>88.70</td>
+      <td>89.20</td>
+      <td>90.02</td>
+    </tr>
+    <tr>
+      <td>SDPNet</td>
+      <td>HRNet-32</td>
+      <td><u>91.54</u></td>
+      <td>86.72</td>
+      <td>85.49</td>
+      <td>85.77</td>
+      <td>87.26</td>
+      <td>87.36</td>
+      <td>93.68</td>
+      <td>90.23</td>
+      <td>89.67</td>
+      <td>89.08</td>
+      <td>89.46</td>
+      <td>90.42</td>
+    </tr>
+    <tr>
+      <td>X-Pose</td>
+      <td>Swin</td>
+      <td>89.07</td>
+      <td>85.05</td>
+      <td>85.26</td>
+      <td>85.52</td>
+      <td>85.79</td>
+      <td>86.14</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>PPM</td>
+      <td>Stable Diffusion</td>
+      <td>91.03</td>
+      <td><u>88.06</u></td>
+      <td>84.48</td>
+      <td><u>86.73</u></td>
+      <td><u>87.40</u></td>
+      <td>87.54</td>
+      <td>93.64</td>
+      <td><strong>92.71</strong></td>
+      <td><strong>91.76</strong></td>
+      <td><strong>92.85</strong></td>
+      <td><strong>91.94</strong></td>
+      <td><strong>92.58</strong></td>
+    </tr>
+    <tr>
+      <td>SCAPE</td>
+      <td>DinoV2</td>
+      <td>91.47</td>
+      <td>86.29</td>
+      <td><u>87.23</u></td>
+      <td><strong>87.07</strong></td>
+      <td>86.94</td>
+      <td><u>87.80</u></td>
+      <td><u>94.33</u></td>
+      <td>90.53</td>
+      <td><u>91.49</u></td>
+      <td><u>90.68</u></td>
+      <td>89.80</td>
+      <td>91.37</td>
+    </tr>
+    <tr>
+      <td>GraphCape</td>
+      <td>SwinV2</td>
+      <td>91.19</td>
+      <td>87.81</td>
+      <td>85.68</td>
+      <td>85.87</td>
+      <td>85.61</td>
+      <td>87.23</td>
+      <td>94.24</td>
+      <td>91.32</td>
+      <td>90.15</td>
+      <td>90.37</td>
+      <td>89.73</td>
+      <td>91.16</td>
+    </tr>
+    <tr>
+      <td><strong>Ours</strong></td>
+      <td><strong>DinoV2 + DPT</strong></td>
+      <td><strong>93.69</strong></td>
+      <td><strong>89.27</strong></td>
+      <td><strong>87.85</strong></td>
+      <td>86.67</td>
+      <td><strong>87.59</strong></td>
+      <td><strong>89.01</strong></td>
+      <td><strong>95.51</strong></td>
+      <td><u>91.94</u></td>
+      <td>91.33</td>
+      <td>90.36</td>
+      <td><u>91.92</u></td>
+      <td><u>92.21</u></td>
+    </tr>
+  </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <p>If you find this research useful, please cite the following:</p>
+
+<pre><code>
+
+</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <p>
+          This page was adapted from <a href="https://github.com/nerfies/nerfies.github.io">this</a> source code.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
